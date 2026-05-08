@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<<!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
@@ -8,10 +8,10 @@
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f5f5;color:#1a1a1a;}
 .app{max-width:480px;margin:0 auto;padding:1rem 1rem 4rem;min-height:100vh;}
-.header{background:#fff;border:1px solid #e8e8e8;border-radius:12px;padding:1rem 1.25rem;margin-bottom:1rem;display:flex;align-items:center;justify-content:space-between;}
+.header{background:linear-gradient(135deg,#1a6b3a 0%,#1D9E75 40%,#2196b0 100%);border:none;border-radius:14px;padding:1.1rem 1.25rem;margin-bottom:1rem;display:flex;align-items:center;justify-content:space-between;box-shadow:0 4px 16px rgba(29,158,117,0.25);}
 .logo-wrap{display:flex;flex-direction:column;}
-.logo-title{font-size:18px;font-weight:600;color:#1a1a1a;}
-.logo-sub{font-size:11px;color:#888;margin-top:2px;}
+.logo-title{font-size:22px;font-weight:700;color:#fff;letter-spacing:0.5px;}
+.logo-sub{font-size:11px;color:rgba(255,255,255,0.8);margin-top:3px;letter-spacing:0.3px;}
 .badge{display:inline-block;font-size:11px;padding:3px 10px;border-radius:20px;}
 .badge-green{background:#EAF3DE;color:#3B6D11;}
 .badge-red{background:#FCEBEB;color:#A32D2D;}
@@ -19,7 +19,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .badge-blue{background:#E6F1FB;color:#185FA5;}
 .badge-amber{background:#FAEEDA;color:#854F0B;}
 .badge-purple{background:#EEEDFE;color:#534AB7;}
-.info-bar{background:#fff;border-radius:8px;padding:8px 14px;margin-bottom:10px;border:1px solid #e8e8e8;}
+.info-bar{background:linear-gradient(135deg,#0c3547 0%,#185F8A 100%);border-radius:10px;padding:10px 14px;margin-bottom:10px;border:none;}
 .court-schedule{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px;}
 .court-item{background:#f8f8f8;border-radius:6px;padding:6px 10px;font-size:11px;text-align:center;}
 .court-item .time{color:#888;margin-bottom:2px;}
@@ -54,12 +54,21 @@ input:focus,select:focus{border-color:#1a1a1a;}
 .stat-num{font-size:24px;font-weight:700;color:#1a1a1a;}
 .stat-label{font-size:11px;color:#888;margin-top:2px;}
 .guest-banner{background:#FAEEDA;border:1px solid #FAC775;border-radius:10px;padding:10px 14px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;}
-.chip-wrap{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;}
-.chip{padding:6px 14px;border-radius:20px;border:1px solid #ddd;font-size:12px;cursor:pointer;color:#666;background:#fff;font-family:inherit;transition:all 0.15s;}
-.chip.on{background:#1a1a1a;color:#fff;border-color:#1a1a1a;}
+.chip-wrap{display:flex;flex-direction:column;gap:0;margin-bottom:10px;border:1px solid #eee;border-radius:12px;overflow:hidden;}
+.chip{width:100%;padding:11px 14px;border-radius:0;border:none;border-bottom:1px solid #f0f0f0;font-size:13px;cursor:pointer;color:#1a1a1a;background:#fff;font-family:inherit;transition:background 0.15s;display:flex;align-items:center;justify-content:space-between;text-align:left;}
+.chip:last-child{border-bottom:none;}
+.chip.on{background:#f0faf5;border-left:3px solid #1D9E75;}
+.chip.on .chip-check{display:flex;}
 .chip:disabled{opacity:0.4;cursor:not-allowed;}
-.chip.guest-chip{border-color:#FAC775;color:#854F0B;}
-.chip.guest-chip.on{background:#BA7517;border-color:#BA7517;color:#fff;}
+.chip-check{width:22px;height:22px;border-radius:50%;background:#1D9E75;color:#fff;font-size:12px;display:none;align-items:center;justify-content:center;flex-shrink:0;}
+.chip-names{display:flex;flex-direction:column;gap:1px;}
+.chip-name-ko{font-size:14px;font-weight:600;color:#1a1a1a;}
+.chip-name-en{font-size:11px;color:#aaa;}
+.chip.on .chip-name-ko{color:#0F6E56;}
+.chip.on .chip-name-en{color:#1D9E75;}
+.chip.guest-chip{background:#FFFDF7;border-left:3px solid #FAC775;}
+.chip.guest-chip .chip-name-ko{color:#854F0B;}
+.chip.guest-chip .chip-check{background:#BA7517;display:flex;}
 .court-block{border:1px solid #eee;border-radius:10px;padding:10px 12px;margin-bottom:8px;}
 .court-title{font-size:13px;font-weight:600;color:#1a1a1a;margin-bottom:6px;display:flex;align-items:center;gap:6px;}
 .match-row{display:flex;align-items:center;gap:4px;}
@@ -92,7 +101,8 @@ input:focus,select:focus{border-color:#1a1a1a;}
 <div class="modal-bg" id="memberModal">
   <div class="modal">
     <div class="modal-title" id="modalTitle">회원 추가</div>
-    <div class="form-group"><label class="form-label">이름</label><input id="mName" placeholder="Hong Gil Dong"></div>
+    <div class="form-group"><label class="form-label">한글 이름</label><input id="mNameKo" placeholder="홍길동"></div>
+    <div class="form-group"><label class="form-label">영문 이름</label><input id="mName" placeholder="Hong Gil Dong"></div>
     <div class="form-group"><label class="form-label">성별</label>
       <select id="mGender"><option value="M">M (남)</option><option value="F">F (여)</option></select>
     </div>
@@ -127,22 +137,22 @@ input:focus,select:focus{border-color:#1a1a1a;}
       <div class="logo-title">🎾 SMTC</div>
       <div class="logo-sub">Sunday Morning Tennis Club</div>
     </div>
-    <span id="deadlineStatus" class="badge badge-green">신청 가능</span>
+    <span id="deadlineStatus" style="display:inline-block;font-size:12px;font-weight:600;padding:5px 12px;border-radius:20px;background:rgba(255,255,255,0.25);color:#fff;border:1px solid rgba(255,255,255,0.5);">신청 가능</span>
   </div>
 
   <div class="info-bar">
-    <div style="display:flex;justify-content:space-between;align-items:center;">
-      <div style="font-size:13px;font-weight:600;color:#1a1a1a;">매주 일요일 06:00 – 08:00</div>
-      <div style="font-size:11px;color:#888;">마감: 토요일 20:00</div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+      <div style="font-size:13px;font-weight:600;color:#fff;">매주 일요일 06:00 – 08:00</div>
+      <div style="font-size:11px;color:rgba(255,255,255,0.7);">마감: 토요일 20:00</div>
     </div>
     <div class="court-schedule">
-      <div class="court-item">
-        <div class="time">06:00 – 07:00</div>
-        <div class="courts">2코트 운영</div>
+      <div class="court-item" style="background:rgba(255,255,255,0.15);border-radius:8px;padding:7px 10px;text-align:center;">
+        <div style="font-size:11px;color:rgba(255,255,255,0.7);margin-bottom:2px;">06:00 – 07:00</div>
+        <div style="font-size:13px;font-weight:700;color:#fff;">🎾 2코트</div>
       </div>
-      <div class="court-item">
-        <div class="time">07:00 – 08:00</div>
-        <div class="courts">1코트 운영</div>
+      <div class="court-item" style="background:rgba(255,255,255,0.15);border-radius:8px;padding:7px 10px;text-align:center;">
+        <div style="font-size:11px;color:rgba(255,255,255,0.7);margin-bottom:2px;">07:00 – 08:00</div>
+        <div style="font-size:13px;font-weight:700;color:#fff;">🎾 1코트</div>
       </div>
     </div>
   </div>
@@ -209,19 +219,19 @@ const DB={
 };
 
 const INITIAL_MEMBERS=[
-  {id:'m01',name:'Park Jin Min',    gender:'M',grade:'A',joinOrder:1},
-  {id:'m02',name:'Kim Seung Chang', gender:'M',grade:'A',joinOrder:2},
-  {id:'m03',name:'Hong Jung Suk',   gender:'M',grade:'A',joinOrder:3},
-  {id:'m04',name:'Choi Jin Gyu',    gender:'M',grade:'A',joinOrder:4},
-  {id:'m05',name:'Bae Yang Byoung', gender:'M',grade:'A',joinOrder:5},
-  {id:'m06',name:'Park Jin Ho',     gender:'M',grade:'A',joinOrder:6},
-  {id:'m07',name:'Son Myoung Yeun', gender:'F',grade:'B',joinOrder:7},
-  {id:'m08',name:'Ham Seung Kyu',   gender:'M',grade:'B',joinOrder:8},
-  {id:'m09',name:'Lee Yong Joon',   gender:'M',grade:'B',joinOrder:9},
-  {id:'m10',name:'Ko Yong Woo',     gender:'M',grade:'B',joinOrder:10},
-  {id:'m11',name:'Sergey',          gender:'M',grade:'A',joinOrder:11},
-  {id:'m12',name:'Cherry',          gender:'F',grade:'C',joinOrder:12},
-  {id:'m13',name:'Vincent',         gender:'M',grade:'A',joinOrder:13},
+  {id:'m01',name:'Park Jin Min',    nameKo:'박진민', gender:'M',grade:'A',joinOrder:1},
+  {id:'m02',name:'Kim Seung Chang', nameKo:'김승창', gender:'M',grade:'A',joinOrder:2},
+  {id:'m03',name:'Hong Jung Suk',   nameKo:'홍정석', gender:'M',grade:'A',joinOrder:3},
+  {id:'m04',name:'Choi Jin Gyu',    nameKo:'최진규', gender:'M',grade:'A',joinOrder:4},
+  {id:'m05',name:'Bae Yang Byoung', nameKo:'배양병', gender:'M',grade:'A',joinOrder:5},
+  {id:'m06',name:'Park Jin Ho',     nameKo:'박진호', gender:'M',grade:'A',joinOrder:6},
+  {id:'m07',name:'Son Myoung Yeun', nameKo:'손명연', gender:'F',grade:'B',joinOrder:7},
+  {id:'m08',name:'Ham Seung Kyu',   nameKo:'함승규', gender:'M',grade:'B',joinOrder:8},
+  {id:'m09',name:'Lee Yong Joon',   nameKo:'이용준', gender:'M',grade:'B',joinOrder:9},
+  {id:'m10',name:'Ko Yong Woo',     nameKo:'고용우', gender:'M',grade:'B',joinOrder:10},
+  {id:'m11',name:'Sergey',          nameKo:'Sergey', gender:'M',grade:'A',joinOrder:11},
+  {id:'m12',name:'Cherry',          nameKo:'Cherry', gender:'F',grade:'C',joinOrder:12},
+  {id:'m13',name:'Vincent',         nameKo:'Vincent',gender:'M',grade:'A',joinOrder:13},
 ];
 
 function init(){
@@ -248,7 +258,11 @@ function checkDeadline(){
   const now=new Date(),day=now.getDay(),hour=now.getHours();
   const closed=(day===6&&hour>=20)||day===0;
   const el=document.getElementById('deadlineStatus');
-  if(el){el.textContent=closed?'마감':'신청 가능';el.className='badge '+(closed?'badge-red':'badge-green');}
+  if(el){
+    el.textContent=closed?'마감':'신청 가능';
+    el.style.background=closed?'rgba(220,50,50,0.35)':'rgba(255,255,255,0.25)';
+    el.style.borderColor=closed?'rgba(255,100,100,0.6)':'rgba(255,255,255,0.5)';
+  }
   return closed;
 }
 
@@ -269,16 +283,34 @@ function renderHome(){
   el.textContent=attendees.length+'명 참여';
   el.className='badge '+(attendees.length>0?'badge-green':'badge-gray');
 
-  let html='<div style="font-size:12px;color:#888;margin-bottom:8px;">정회원 — 클릭으로 참여/취소</div><div class="chip-wrap">';
+  let html='<div style="font-size:12px;color:#888;margin-bottom:8px;">정회원 — 클릭으로 참여/취소</div>';
+  html+='<div class="chip-wrap">';
   members.forEach(m=>{
     const on=attendees.find(a=>a.id===m.id)?'on':'';
-    html+=`<button class="chip ${on}" id="chip_${m.id}" onclick="toggleAttend('${m.id}')" ${closed?'disabled':''}>${m.name}</button>`;
+    const nameKo=m.nameKo||m.name;
+    html+=`<button class="chip ${on}" id="chip_${m.id}" onclick="toggleAttend('${m.id}')" ${closed?'disabled':''}>
+      <div class="chip-names">
+        <div class="chip-name-ko">${nameKo}</div>
+        <div class="chip-name-en">${m.name}</div>
+      </div>
+      <div class="chip-check">✓</div>
+    </button>`;
   });
   html+='</div>';
+
   const guests=attendees.filter(a=>a.isGuest);
   if(guests.length){
-    html+='<div style="font-size:12px;color:#854F0B;margin-bottom:6px;">게스트</div><div class="chip-wrap">';
-    guests.forEach(g=>{html+=`<button class="chip guest-chip on" onclick="removeGuest('${g.id}')">${g.name} ✕</button>`;});
+    html+='<div style="font-size:12px;color:#854F0B;margin:8px 0 6px;">게스트</div>';
+    html+='<div class="chip-wrap">';
+    guests.forEach(g=>{
+      html+=`<button class="chip guest-chip" onclick="removeGuest('${g.id}')">
+        <div class="chip-names">
+          <div class="chip-name-ko">${g.name}</div>
+          <div class="chip-name-en">Guest · 클릭시 취소</div>
+        </div>
+        <div class="chip-check">✕</div>
+      </button>`;
+    });
     html+='</div>';
   }
   document.getElementById('attendList').innerHTML=html;
@@ -451,6 +483,7 @@ let editingId=null;
 function openAddMember(){
   editingId=null;
   document.getElementById('modalTitle').textContent='회원 추가';
+  document.getElementById('mNameKo').value='';
   document.getElementById('mName').value='';
   document.getElementById('mGender').value='M';
   document.getElementById('mGrade').value='B';
@@ -460,24 +493,26 @@ function editMember(id){
   const m=memberById(id);if(!m)return;
   editingId=id;
   document.getElementById('modalTitle').textContent='회원 수정';
+  document.getElementById('mNameKo').value=m.nameKo||'';
   document.getElementById('mName').value=m.name;
   document.getElementById('mGender').value=m.gender;
   document.getElementById('mGrade').value=m.grade;
   openModal('memberModal');
 }
 function saveMember(){
+  const nameKo=document.getElementById('mNameKo').value.trim();
   const name=document.getElementById('mName').value.trim();
   const gender=document.getElementById('mGender').value;
   const grade=document.getElementById('mGrade').value;
-  if(!name){toast('이름을 입력해주세요');return;}
+  if(!name){toast('영문 이름을 입력해주세요');return;}
   const members=DB.get('members')||[];
   if(editingId){
     const i=members.findIndex(m=>m.id===editingId);
-    if(i>=0)members[i]={...members[i],name,gender,grade};
+    if(i>=0)members[i]={...members[i],name,nameKo:nameKo||name,gender,grade};
     toast('수정 완료');
   } else {
     const maxOrder=Math.max(...members.map(m=>m.joinOrder),0);
-    members.push({id:uid(),name,gender,grade,joinOrder:maxOrder+1});
+    members.push({id:uid(),name,nameKo:nameKo||name,gender,grade,joinOrder:maxOrder+1});
     toast(name+' 추가!');
   }
   DB.set('members',members);
@@ -503,7 +538,7 @@ function renderMembers(){
     return `<div class="member-row">
       ${avatar(m.name,i)}
       <div class="member-info">
-        <div class="member-name">${m.name} <span style="font-size:11px;color:${m.gender==='F'?'#993556':'#185FA5'};">${m.gender}</span></div>
+        <div class="member-name">${m.nameKo||m.name} <span style="font-size:11px;font-weight:400;color:#aaa;">${m.name}</span> <span style="font-size:11px;color:${m.gender==='F'?'#993556':'#185FA5'};">${m.gender}</span></div>
         <div class="member-sub">${total}경기 · 승률 ${wr}% · <span class="badge ${gradeBadge[m.grade]||'badge-gray'}" style="font-size:10px;">${gradeLabel[m.grade]||m.grade}</span></div>
       </div>
       <button class="btn btn-sm" onclick="editMember('${m.id}')">수정</button>
