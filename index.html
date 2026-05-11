@@ -1,581 +1,397 @@
-<<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>SMTC - Sunday Morning Tennis Club</title>
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="SMTC">
+<link rel="apple-touch-icon" href="https://raw.githubusercontent.com/깃허브아이디/저장소명/main/icon.png">
+
 <style>
-*{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f5f5;color:#1a1a1a;}
-.app{max-width:480px;margin:0 auto;padding:1rem 1rem 4rem;min-height:100vh;}
-.header{background:linear-gradient(135deg,#1a6b3a 0%,#1D9E75 40%,#2196b0 100%);border:none;border-radius:14px;padding:1.1rem 1.25rem;margin-bottom:1rem;display:flex;align-items:center;justify-content:space-between;box-shadow:0 4px 16px rgba(29,158,117,0.25);}
-.logo-wrap{display:flex;flex-direction:column;}
-.logo-title{font-size:22px;font-weight:700;color:#fff;letter-spacing:0.5px;}
-.logo-sub{font-size:11px;color:rgba(255,255,255,0.8);margin-top:3px;letter-spacing:0.3px;}
-.badge{display:inline-block;font-size:11px;padding:3px 10px;border-radius:20px;}
-.badge-green{background:#EAF3DE;color:#3B6D11;}
-.badge-red{background:#FCEBEB;color:#A32D2D;}
-.badge-gray{background:#F1EFE8;color:#5F5E5A;}
-.badge-blue{background:#E6F1FB;color:#185FA5;}
-.badge-amber{background:#FAEEDA;color:#854F0B;}
-.badge-purple{background:#EEEDFE;color:#534AB7;}
-.info-bar{background:linear-gradient(135deg,#0c3547 0%,#185F8A 100%);border-radius:10px;padding:10px 14px;margin-bottom:10px;border:none;}
-.court-schedule{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px;}
-.court-item{background:#f8f8f8;border-radius:6px;padding:6px 10px;font-size:11px;text-align:center;}
-.court-item .time{color:#888;margin-bottom:2px;}
-.court-item .courts{font-weight:600;color:#1a1a1a;font-size:13px;}
-.nav{display:flex;gap:3px;margin-bottom:1rem;background:#f0f0f0;padding:4px;border-radius:10px;}
-.nav button{flex:1;padding:7px 3px;border:none;background:transparent;font-size:11px;color:#888;cursor:pointer;border-radius:7px;transition:all 0.15s;font-family:inherit;}
-.nav button.active{background:#fff;color:#1a1a1a;font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,0.1);}
-.section{display:none;}.section.active{display:block;}
-.card{background:#fff;border:1px solid #e8e8e8;border-radius:12px;padding:1rem 1.25rem;margin-bottom:12px;}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:5px;padding:8px 14px;border:1px solid #ddd;border-radius:8px;background:transparent;font-size:13px;color:#1a1a1a;cursor:pointer;transition:all 0.15s;font-family:inherit;}
-.btn:hover{background:#f5f5f5;}
-.btn-primary{background:#1a1a1a;color:#fff;border-color:#1a1a1a;}
-.btn-primary:hover{opacity:0.85;}
-.btn-green{background:#1D9E75;color:#fff;border-color:#1D9E75;}
-.btn-danger{border-color:#E24B4A;color:#A32D2D;}
-.btn-danger:hover{background:#FCEBEB;}
-.btn-sm{padding:5px 10px;font-size:12px;}
-.btn:disabled{opacity:0.4;cursor:not-allowed;}
-input,select{width:100%;padding:9px 12px;border:1px solid #ddd;border-radius:8px;background:#fff;color:#1a1a1a;font-size:14px;font-family:inherit;outline:none;}
-input:focus,select:focus{border-color:#1a1a1a;}
-.form-group{margin-bottom:12px;}
-.form-label{font-size:13px;color:#666;margin-bottom:5px;display:block;}
-.section-title{font-size:15px;font-weight:600;color:#1a1a1a;margin-bottom:12px;}
-.member-row{display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid #f0f0f0;}
-.member-row:last-child{border-bottom:none;}
-.avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0;}
-.member-info{flex:1;min-width:0;}
-.member-name{font-size:14px;font-weight:600;color:#1a1a1a;}
-.member-sub{font-size:11px;color:#888;margin-top:1px;}
-.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
-.stat-card{background:#f8f8f8;border-radius:10px;padding:.85rem;text-align:center;}
-.stat-num{font-size:24px;font-weight:700;color:#1a1a1a;}
-.stat-label{font-size:11px;color:#888;margin-top:2px;}
-.guest-banner{background:#FAEEDA;border:1px solid #FAC775;border-radius:10px;padding:10px 14px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;}
-.chip-wrap{display:flex;flex-direction:column;gap:0;margin-bottom:10px;border:1px solid #eee;border-radius:12px;overflow:hidden;}
-.chip{width:100%;padding:11px 14px;border-radius:0;border:none;border-bottom:1px solid #f0f0f0;font-size:13px;cursor:pointer;color:#1a1a1a;background:#fff;font-family:inherit;transition:background 0.15s;display:flex;align-items:center;justify-content:space-between;text-align:left;}
-.chip:last-child{border-bottom:none;}
-.chip.on{background:#f0faf5;border-left:3px solid #1D9E75;}
-.chip.on .chip-check{display:flex;}
-.chip:disabled{opacity:0.4;cursor:not-allowed;}
-.chip-check{width:22px;height:22px;border-radius:50%;background:#1D9E75;color:#fff;font-size:12px;display:none;align-items:center;justify-content:center;flex-shrink:0;}
-.chip-names{display:flex;flex-direction:column;gap:1px;}
-.chip-name-ko{font-size:14px;font-weight:600;color:#1a1a1a;}
-.chip-name-en{font-size:11px;color:#aaa;}
-.chip.on .chip-name-ko{color:#0F6E56;}
-.chip.on .chip-name-en{color:#1D9E75;}
-.chip.guest-chip{background:#FFFDF7;border-left:3px solid #FAC775;}
-.chip.guest-chip .chip-name-ko{color:#854F0B;}
-.chip.guest-chip .chip-check{background:#BA7517;display:flex;}
-.court-block{border:1px solid #eee;border-radius:10px;padding:10px 12px;margin-bottom:8px;}
-.court-title{font-size:13px;font-weight:600;color:#1a1a1a;margin-bottom:6px;display:flex;align-items:center;gap:6px;}
-.match-row{display:flex;align-items:center;gap:4px;}
-.team-a{flex:1;text-align:right;font-size:12px;color:#1a1a1a;}
-.team-b{flex:1;text-align:left;font-size:12px;color:#1a1a1a;}
-.vs-box{padding:2px 6px;font-size:11px;color:#aaa;}
-.score-inputs{display:flex;align-items:center;gap:4px;margin-top:6px;}
-.score-inputs input{width:52px;text-align:center;padding:5px 6px;}
-.rank-row{display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid #f0f0f0;}
-.rank-row:last-child{border-bottom:none;}
-.rank-num{font-size:15px;font-weight:700;width:24px;text-align:center;color:#aaa;}
-.rank-num.gold{color:#BA7517;}.rank-num.silver{color:#888;}.rank-num.bronze{color:#993C1D;}
-.bar-wrap{width:64px;height:5px;background:#eee;border-radius:3px;overflow:hidden;}
-.bar-fill{height:100%;background:#1D9E75;border-radius:3px;}
-.round-header{background:#f8f8f8;border-radius:8px;padding:8px 12px;margin-bottom:8px;font-size:13px;font-weight:600;color:#1a1a1a;display:flex;justify-content:space-between;align-items:center;gap:6px;flex-wrap:wrap;}
-.toast-box{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1a1a1a;color:#fff;padding:9px 20px;border-radius:24px;font-size:13px;opacity:0;transition:opacity 0.3s;pointer-events:none;z-index:999;white-space:nowrap;}
-.toast-box.show{opacity:1;}
-.empty{text-align:center;padding:2rem 0;color:#aaa;font-size:14px;}
-.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:100;align-items:center;justify-content:center;}
-.modal-bg.open{display:flex;}
-.modal{background:#fff;border-radius:16px;padding:1.25rem;width:90%;max-width:400px;max-height:85vh;overflow-y:auto;}
-.modal-title{font-size:15px;font-weight:600;color:#1a1a1a;margin-bottom:1rem;}
+/* 디자인 시스템 */
+:root { --primary: #1D9E75; --dark: #1a6b3a; --danger: #E24B4A; --bg: #f5f5f5; }
+*{box-sizing:border-box;margin:0;padding:0; -webkit-tap-highlight-color:transparent;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:#1a1a1a;}
+.app{max-width:480px;margin:0 auto;padding:1rem 1rem 5rem;min-height:100vh;}
+
+/* 헤더 & 인포바 */
+.header{background:linear-gradient(135deg,#1a6b3a 0%,#1D9E75 100%); border-radius:14px;padding:1.1rem 1.25rem;margin-bottom:1rem;color:#fff;display:flex;justify-content:space-between;align-items:center;box-shadow:0 4px 15px rgba(29,158,117,0.2);}
+.info-bar{background:#0c3547; border-radius:10px;padding:12px;margin-bottom:10px;color:#fff;}
+.court-schedule{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;}
+.court-item{background:rgba(255,255,255,0.1); border-radius:8px;padding:8px;text-align:center;font-size:11px;}
+
+/* 회비 납부 안내 카드 */
+.fee-card{background:#fff; border:1px solid var(--primary); border-radius:12px; padding:15px; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;}
+.fee-info b { font-size:15px; color:var(--dark); }
+
+/* 네비게이션 */
+.nav{display:flex;gap:4px;margin-bottom:1rem;background:#eee;padding:4px;border-radius:10px;position:sticky;top:10px;z-index:90;}
+.nav button{flex:1;padding:10px 0;border:none;background:transparent;font-size:12px;color:#888;cursor:pointer;border-radius:7px;font-weight:600;}
+.nav button.active{background:#fff;color:#1a1a1a;box-shadow:0 2px 5px rgba(0,0,0,0.1);}
+
+/* 카드 및 컴포넌트 */
+.section{display:none; animation: fadeIn 0.3s;}
+.section.active{display:block;}
+@keyframes fadeIn { from {opacity:0;} to {opacity:1;} }
+.card{background:#fff;border-radius:12px;padding:1.25rem;margin-bottom:12px;border:1px solid #eee;}
+.btn{display:inline-flex;align-items:center;justify-content:center;padding:10px 15px;border-radius:8px;border:none;font-size:13px;font-weight:600;cursor:pointer;}
+.btn-primary{background:var(--primary);color:#fff;}
+.btn-danger{background:#fff; border:1px solid var(--danger); color:var(--danger);}
+.btn-sm{padding:5px 10px; font-size:11px;}
+
+/* 리스트 스타일 */
+.member-row, .rank-row{display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid #f0f0f0;}
+.avatar{width:36px;height:36px;border-radius:50%;background:#E6F1FB;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;color:var(--primary);}
+.member-info{flex:1;}
+.badge{padding:2px 8px; border-radius:10px; font-size:10px; font-weight:700;}
+.badge-a{background:#E6F1FB; color:#185FA5;}
+.badge-paid{background:#EAF3DE; color:#3B6D11;}
+
+/* 토스트 알림 */
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.8);color:#fff;padding:10px 20px;border-radius:30px;font-size:13px;z-index:1000;display:none;}
+
+/* 매칭표 스타일 */
+.court-block{border:1px solid #eee;border-radius:10px;padding:12px;margin-bottom:10px;}
+.match-row{display:flex;justify-content:space-between;align-items:center;margin:10px 0;}
+.vs{color:#ccc;font-weight:bold;font-size:11px;}
+.score-input{width:45px;padding:5px;text-align:center;border:1px solid #ddd;border-radius:4px;}
 </style>
 </head>
 <body>
 
-<div class="toast-box" id="toast"></div>
-
-<!-- 회원 모달 -->
-<div class="modal-bg" id="memberModal">
-  <div class="modal">
-    <div class="modal-title" id="modalTitle">회원 추가</div>
-    <div class="form-group"><label class="form-label">한글 이름</label><input id="mNameKo" placeholder="홍길동"></div>
-    <div class="form-group"><label class="form-label">영문 이름</label><input id="mName" placeholder="Hong Gil Dong"></div>
-    <div class="form-group"><label class="form-label">성별</label>
-      <select id="mGender"><option value="M">M (남)</option><option value="F">F (여)</option></select>
-    </div>
-    <div class="form-group"><label class="form-label">그룹 (내부용 — 앱에 표시 안 됨)</label>
-      <select id="mGrade"><option value="A">A조 (상급)</option><option value="B">B조 (중급)</option><option value="C">C조 (초급)</option></select>
-    </div>
-    <div style="display:flex;gap:8px;margin-top:4px;">
-      <button class="btn btn-primary" style="flex:1;" onclick="saveMember()">저장</button>
-      <button class="btn" style="flex:1;" onclick="closeModal('memberModal')">취소</button>
-    </div>
-  </div>
-</div>
-
-<!-- 게스트 모달 -->
-<div class="modal-bg" id="guestModal">
-  <div class="modal">
-    <div class="modal-title">게스트 참여 신청</div>
-    <div class="form-group"><label class="form-label">이름</label><input id="gName" placeholder="Guest Name"></div>
-    <div class="form-group"><label class="form-label">실력 수준</label>
-      <select id="gLevel"><option value="A">상급</option><option value="B" selected>중급</option><option value="C">초급</option></select>
-    </div>
-    <div style="display:flex;gap:8px;margin-top:4px;">
-      <button class="btn btn-green" style="flex:1;" onclick="addGuest()">참여 신청</button>
-      <button class="btn" style="flex:1;" onclick="closeModal('guestModal')">취소</button>
-    </div>
-  </div>
-</div>
+<div class="toast" id="toast"></div>
 
 <div class="app">
-  <div class="header">
-    <div class="logo-wrap">
-      <div class="logo-title">🎾 SMTC</div>
-      <div class="logo-sub">Sunday Morning Tennis Club</div>
+    <div class="header">
+        <div>
+            <div style="font-size:22px;font-weight:800;letter-spacing:-0.5px;">🎾 SMTC</div>
+            <div style="font-size:10px;opacity:0.8;">Sunday Morning Tennis Club</div>
+        </div>
+        <div id="adminBadge" style="font-size:10px; background:rgba(0,0,0,0.2); padding:4px 8px; border-radius:10px;">Guest Mode</div>
     </div>
-    <span id="deadlineStatus" style="display:inline-block;font-size:12px;font-weight:600;padding:5px 12px;border-radius:20px;background:rgba(255,255,255,0.25);color:#fff;border:1px solid rgba(255,255,255,0.5);">신청 가능</span>
-  </div>
 
-  <div class="info-bar">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-      <div style="font-size:13px;font-weight:600;color:#fff;">매주 일요일 06:00 – 08:00</div>
-      <div style="font-size:11px;color:rgba(255,255,255,0.7);">마감: 토요일 20:00</div>
+    <div class="info-bar">
+        <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:600;">
+            <span>일요일 06:00 – 08:00</span>
+            <span style="color:#FFD700;">마감: 토요일 20:00</span>
+        </div>
+        <div class="court-schedule">
+            <div class="court-item"><b>1코트 (전체)</b><br>06:00 – 08:00</div>
+            <div class="court-item"><b>2코트 (초반)</b><br>06:00 – 07:00</div>
+        </div>
     </div>
-    <div class="court-schedule">
-      <div class="court-item" style="background:rgba(255,255,255,0.15);border-radius:8px;padding:7px 10px;text-align:center;">
-        <div style="font-size:11px;color:rgba(255,255,255,0.7);margin-bottom:2px;">06:00 – 07:00</div>
-        <div style="font-size:13px;font-weight:700;color:#fff;">🎾 2코트</div>
-      </div>
-      <div class="court-item" style="background:rgba(255,255,255,0.15);border-radius:8px;padding:7px 10px;text-align:center;">
-        <div style="font-size:11px;color:rgba(255,255,255,0.7);margin-bottom:2px;">07:00 – 08:00</div>
-        <div style="font-size:13px;font-weight:700;color:#fff;">🎾 1코트</div>
-      </div>
-    </div>
-  </div>
 
-  <div class="nav">
-    <button class="active" onclick="showTab('home',this)">참여신청</button>
-    <button onclick="showTab('matching',this)">매칭표</button>
-    <button onclick="showTab('results',this)">결과</button>
-    <button onclick="showTab('members',this)">회원</button>
-    <button onclick="showTab('rank',this)">랭킹</button>
-  </div>
-
-  <div id="home" class="section active">
-    <div class="guest-banner" onclick="openModal('guestModal')">
-      <div>
-        <div style="font-size:13px;font-weight:600;color:#854F0B;">👋 게스트 참여 신청</div>
-        <div style="font-size:11px;color:#BA7517;">정회원이 아닌 분도 참여 가능합니다</div>
-      </div>
-      <span style="font-size:11px;color:#BA7517;">클릭 →</span>
+    <div class="fee-card">
+        <div class="fee-info">
+            <b>신한 110-123-456789</b><br>
+            <span style="font-size:12px;color:#666;">예금주: 홍길동 (SMTC 회비)</span>
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="copyAccount('110123456789')">복사</button>
     </div>
-    <div class="card">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-        <div class="section-title" style="margin:0;">이번 주 참여</div>
-        <span id="attendCount" class="badge badge-gray">0명</span>
-      </div>
-      <div id="attendList"></div>
-    </div>
-  </div>
 
-  <div id="matching" class="section">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-      <div class="section-title" style="margin:0;">매칭표</div>
-      <button class="btn btn-primary btn-sm" onclick="generateMatching()">매칭 생성</button>
+    <div class="nav">
+        <button class="active" onclick="showTab('home',this)">참여신청</button>
+        <button onclick="showTab('matching',this)">매칭표</button>
+        <button onclick="showTab('results',this)">결과입력</button>
+        <button onclick="showTab('accounting',this)">회계장부</button>
+        <button onclick="showTab('rank',this)">랭킹</button>
     </div>
-    <div class="card" style="padding:10px 14px;margin-bottom:10px;">
-      <div style="font-size:12px;color:#888;">🔒 그룹 비공개 · 1라운드 혼합, 2라운드~ 동급 매칭</div>
+
+    <div id="home" class="section active">
+        <div class="card">
+            <div style="display:flex;justify-content:space-between;margin-bottom:15px;">
+                <span class="section-title" style="margin:0;">이번 주 참여자</span>
+                <span id="attCount" class="badge badge-a">0명</span>
+            </div>
+            <div id="attList" class="chip-wrap"></div>
+        </div>
     </div>
-    <div id="matchingResult"></div>
-  </div>
 
-  <div id="results" class="section">
-    <div class="section-title">경기 결과 입력</div>
-    <div id="resultsList"></div>
-  </div>
-
-  <div id="members" class="section">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-      <div class="section-title" style="margin:0;">회원 명단 <span style="font-size:12px;color:#888;" id="memberCount"></span></div>
-      <button class="btn btn-primary btn-sm" onclick="openAddMember()">+ 추가</button>
+    <div id="matching" class="section">
+        <div style="display:flex;justify-content:space-between;margin-bottom:15px;">
+            <span class="section-title" style="margin:0;">대진표</span>
+            <button class="btn btn-primary btn-sm" onclick="generateMatching()">매칭생성(Admin)</button>
+        </div>
+        <div id="matchDisplay"></div>
     </div>
-    <div class="card" style="padding:0.75rem 1.25rem;" id="memberList"></div>
-  </div>
 
-  <div id="rank" class="section">
-    <div class="section-title">🏆 SMTC 랭킹</div>
-    <div class="card" style="padding:0.75rem 1.25rem;" id="rankList"></div>
-  </div>
+    <div id="results" class="section">
+        <div style="display:flex;justify-content:space-between;margin-bottom:15px;">
+            <span class="section-title" style="margin:0;">스코어 입력</span>
+            <button class="btn btn-danger btn-sm" onclick="prepareNextWeek()">새 주차 초기화</button>
+        </div>
+        <div id="scoreList"></div>
+    </div>
+
+    <div id="accounting" class="section">
+        <div class="stat-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:15px;">
+            <div class="card" style="text-align:center;margin:0;padding:15px;">
+                <div id="accIncome" style="font-size:18px;font-weight:800;color:var(--primary);">0</div>
+                <div style="font-size:11px;color:#888;">총 수입</div>
+            </div>
+            <div class="card" style="text-align:center;margin:0;padding:15px;">
+                <div id="accBalance" style="font-size:18px;font-weight:800;">0</div>
+                <div style="font-size:11px;color:#888;">현재 잔액</div>
+            </div>
+        </div>
+        <div class="card" id="accLogs"></div>
+    </div>
+
+    <div id="rank" class="section">
+        <div class="card" id="rankList"></div>
+    </div>
 </div>
 
 <script>
-const DB={
-  get(k){try{return JSON.parse(localStorage.getItem('smtc_'+k)||'null');}catch(e){return null;}},
-  set(k,v){localStorage.setItem('smtc_'+k,JSON.stringify(v));}
+// 1. 초기 데이터 및 설정
+const SHEET_ID = '15T4MShNg2LbuKn9897qoojPZKRUWzDqOYNrvdDPmCCw';
+const ADMIN_PW = '0600'; // 관리자 암호 설정
+let isAdmin = false;
+
+const DB = {
+    get(k){ return JSON.parse(localStorage.getItem('smtc_'+k) || 'null'); },
+    set(k,v){ localStorage.setItem('smtc_'+k, JSON.stringify(v)); }
 };
 
-const INITIAL_MEMBERS=[
-  {id:'m01',name:'Park Jin Min',    nameKo:'박진민', gender:'M',grade:'A',joinOrder:1},
-  {id:'m02',name:'Kim Seung Chang', nameKo:'김승창', gender:'M',grade:'A',joinOrder:2},
-  {id:'m03',name:'Hong Jung Suk',   nameKo:'홍정석', gender:'M',grade:'A',joinOrder:3},
-  {id:'m04',name:'Choi Jin Gyu',    nameKo:'최진규', gender:'M',grade:'A',joinOrder:4},
-  {id:'m05',name:'Bae Yang Byoung', nameKo:'배양병', gender:'M',grade:'A',joinOrder:5},
-  {id:'m06',name:'Park Jin Ho',     nameKo:'박진호', gender:'M',grade:'A',joinOrder:6},
-  {id:'m07',name:'Son Myoung Yeun', nameKo:'손명연', gender:'F',grade:'B',joinOrder:7},
-  {id:'m08',name:'Ham Seung Kyu',   nameKo:'함승규', gender:'M',grade:'B',joinOrder:8},
-  {id:'m09',name:'Lee Yong Joon',   nameKo:'이용준', gender:'M',grade:'B',joinOrder:9},
-  {id:'m10',name:'Ko Yong Woo',     nameKo:'고용우', gender:'M',grade:'B',joinOrder:10},
-  {id:'m11',name:'Sergey',          nameKo:'Sergey', gender:'M',grade:'A',joinOrder:11},
-  {id:'m12',name:'Cherry',          nameKo:'Cherry', gender:'F',grade:'C',joinOrder:12},
-  {id:'m13',name:'Vincent',         nameKo:'Vincent',gender:'M',grade:'A',joinOrder:13},
-];
-
-function init(){
-  if(!DB.get('members')) DB.set('members',INITIAL_MEMBERS);
-  if(!DB.get('attendees')) DB.set('attendees',[]);
-  if(!DB.get('matches')) DB.set('matches',[]);
-  if(!DB.get('gameResults')) DB.set('gameResults',{});
-}
-
-const AV_COLORS=[['#E6F1FB','#185FA5'],['#E1F5EE','#0F6E56'],['#FAEEDA','#854F0B'],['#EEEDFE','#534AB7'],['#FAECE7','#993C1D'],['#FBEAF0','#993556'],['#EAF3DE','#3B6D11'],['#FCEBEB','#A32D2D']];
-function uid(){return 'id'+Date.now()+Math.random().toString(36).slice(2,5);}
-function avatar(name,idx){
-  const[bg,c]=AV_COLORS[(idx||0)%AV_COLORS.length];
-  const ini=name?name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase():'?';
-  return `<div class="avatar" style="background:${bg};color:${c};">${ini}</div>`;
-}
-function memberById(id){return(DB.get('members')||[]).find(m=>m.id===id);}
-function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200);}
-function openModal(id){document.getElementById(id).classList.add('open');}
-function closeModal(id){document.getElementById(id).classList.remove('open');}
-function shuffle(arr){return arr.slice().sort(()=>Math.random()-0.5);}
-
-function checkDeadline(){
-  const now=new Date(),day=now.getDay(),hour=now.getHours();
-  const closed=(day===6&&hour>=20)||day===0;
-  const el=document.getElementById('deadlineStatus');
-  if(el){
-    el.textContent=closed?'마감':'신청 가능';
-    el.style.background=closed?'rgba(220,50,50,0.35)':'rgba(255,255,255,0.25)';
-    el.style.borderColor=closed?'rgba(255,100,100,0.6)':'rgba(255,255,255,0.5)';
-  }
-  return closed;
-}
-
-function showTab(id,btn){
-  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
-  document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  btn.classList.add('active');
-  renders[id]&&renders[id]();
-}
-
-// ── 참여신청 ──
-function renderHome(){
-  const members=DB.get('members')||[];
-  const attendees=DB.get('attendees')||[];
-  const closed=checkDeadline();
-  const el=document.getElementById('attendCount');
-  el.textContent=attendees.length+'명 참여';
-  el.className='badge '+(attendees.length>0?'badge-green':'badge-gray');
-
-  let html='<div style="font-size:12px;color:#888;margin-bottom:8px;">정회원 — 클릭으로 참여/취소</div>';
-  html+='<div class="chip-wrap">';
-  members.forEach(m=>{
-    const on=attendees.find(a=>a.id===m.id)?'on':'';
-    const nameKo=m.nameKo||m.name;
-    html+=`<button class="chip ${on}" id="chip_${m.id}" onclick="toggleAttend('${m.id}')" ${closed?'disabled':''}>
-      <div class="chip-names">
-        <div class="chip-name-ko">${nameKo}</div>
-        <div class="chip-name-en">${m.name}</div>
-      </div>
-      <div class="chip-check">✓</div>
-    </button>`;
-  });
-  html+='</div>';
-
-  const guests=attendees.filter(a=>a.isGuest);
-  if(guests.length){
-    html+='<div style="font-size:12px;color:#854F0B;margin:8px 0 6px;">게스트</div>';
-    html+='<div class="chip-wrap">';
-    guests.forEach(g=>{
-      html+=`<button class="chip guest-chip" onclick="removeGuest('${g.id}')">
-        <div class="chip-names">
-          <div class="chip-name-ko">${g.name}</div>
-          <div class="chip-name-en">Guest · 클릭시 취소</div>
-        </div>
-        <div class="chip-check">✕</div>
-      </button>`;
-    });
-    html+='</div>';
-  }
-  document.getElementById('attendList').innerHTML=html;
-}
-
-function toggleAttend(memberId){
-  if(checkDeadline()){toast('참여 신청이 마감되었습니다');return;}
-  const attendees=DB.get('attendees')||[];
-  const member=memberById(memberId);
-  const idx=attendees.findIndex(a=>a.id===memberId);
-  if(idx>=0){attendees.splice(idx,1);toast(member.name+' 취소');}
-  else{attendees.push({id:memberId,name:member.name,grade:member.grade,gender:member.gender,isGuest:false,joinOrder:member.joinOrder});toast(member.name+' 참여!');}
-  DB.set('attendees',attendees);
-  renderHome();
-}
-
-function addGuest(){
-  const name=document.getElementById('gName').value.trim();
-  const level=document.getElementById('gLevel').value;
-  if(!name){toast('이름을 입력해주세요');return;}
-  const attendees=DB.get('attendees')||[];
-  attendees.push({id:uid(),name,grade:level,gender:'M',isGuest:true,joinOrder:999});
-  DB.set('attendees',attendees);
-  closeModal('guestModal');
-  document.getElementById('gName').value='';
-  toast(name+' 게스트 참여!');
-  renderHome();
-}
-
-function removeGuest(id){
-  DB.set('attendees',(DB.get('attendees')||[]).filter(a=>a.id!==id));
-  toast('게스트 취소');renderHome();
-}
-
-// ── 매칭 생성 (코트 운영 반영) ──
-// 1라운드 06:00-06:30 혼합  2코트
-// 2라운드 06:30-07:00 동급  2코트
-// 3라운드 07:00-07:30 동급  1코트
-// 4라운드 07:30-08:00 동급  1코트
-const ROUNDS=[
-  {label:'1라운드',time:'06:00–06:30',mixed:true, courts:[1,2]},
-  {label:'2라운드',time:'06:30–07:00',mixed:false,courts:[1,2]},
-  {label:'3라운드',time:'07:00–07:30',mixed:false,courts:[1]},
-  {label:'4라운드',time:'07:30–08:00',mixed:false,courts:[1]},
-];
-
-function generateMatching(){
-  const attendees=DB.get('attendees')||[];
-  if(attendees.length<4){toast('최소 4명이 필요해요');return;}
-  const sorted=attendees.slice().sort((a,b)=>a.joinOrder-b.joinOrder);
-  const aGrp=sorted.filter(p=>p.grade==='A');
-  const bGrp=sorted.filter(p=>p.grade==='B'||p.grade==='C');
-  const allMatches=[];
-
-  ROUNDS.forEach((round,ri)=>{
-    let players;
-    if(round.mixed){
-      // 1라운드: A,B 교차 혼합
-      const aS=shuffle(aGrp),bS=shuffle(bGrp);
-      players=[];
-      const maxLen=Math.max(aS.length,bS.length);
-      for(let i=0;i<maxLen;i++){if(aS[i])players.push(aS[i]);if(bS[i])players.push(bS[i]);}
-    } else {
-      // 2~4라운드: 동급 우선
-      players=[...shuffle(aGrp),...shuffle(bGrp)];
+// 2. 관리자 인증 시스템
+function authAdmin() {
+    if (isAdmin) return true;
+    const pw = prompt("관리자 암호를 입력하세요.");
+    if (pw === ADMIN_PW) {
+        isAdmin = true;
+        document.getElementById('adminBadge').textContent = "Admin Mode";
+        document.getElementById('adminBadge').style.background = "var(--primary)";
+        return true;
     }
-
-    const roundMatches=[];
-    let pool=players.slice();
-    round.courts.forEach(court=>{
-      if(pool.length>=4){
-        const teamA=[pool.shift(),pool.shift()];
-        const teamB=[pool.shift(),pool.shift()];
-        roundMatches.push({id:uid(),round:ri,court,teamA,teamB,scoreA:null,scoreB:null});
-      }
-    });
-    const waiting=pool.map(p=>p.name);
-    allMatches.push({...round,matches:roundMatches,waiting});
-  });
-
-  DB.set('matches',allMatches);
-  renderMatching();
-  toast('매칭 생성 완료!');
+    toast("권한이 없습니다.");
+    return false;
 }
 
-function renderMatching(){
-  const matches=DB.get('matches')||[];
-  if(!matches.length){document.getElementById('matchingResult').innerHTML='<div class="empty">매칭 생성 버튼을 눌러주세요</div>';return;}
-  document.getElementById('matchingResult').innerHTML=matches.map((round,ri)=>{
-    const courtCount=round.courts.length;
-    const courtBadge=courtCount===2
-      ?'<span class="badge badge-blue" style="font-size:10px;">2코트</span>'
-      :'<span class="badge badge-purple" style="font-size:10px;">1코트</span>';
-    const typeBadge=`<span class="badge ${ri===0?'badge-amber':'badge-gray'}">${ri===0?'혼합':'동급'}</span>`;
-    const courts=round.matches.map(g=>{
-      const tA=g.teamA.map(p=>p.name).join(' / ');
-      const tB=g.teamB.map(p=>p.name).join(' / ');
-      const done=g.scoreA!==null;
-      return `<div class="court-block">
-        <div class="court-title">
-          <span class="badge badge-blue">${g.court}코트</span>
-          ${done?`<span class="badge badge-green">${g.scoreA} : ${g.scoreB}</span>`:''}
+// 3. 데이터 로딩 (실시간 시트 연동)
+// 실제 운영시에는 fetch(구글시트URL)를 사용하며, 여기서는 초기 로직을 구현합니다.
+const MEMBERS = [
+    {id:'M01', name:'박진민', eng:'park jin min', gender:'M', grade:'A'},
+    {id:'M02', name:'김승창', eng:'kim seung chang', gender:'M', grade:'A'},
+    {id:'M03', name:'홍정석', eng:'hong jung suk', gender:'M', grade:'A'},
+    {id:'M04', name:'최진규', eng:'choi jin gyu', gender:'M', grade:'A'},
+    {id:'M05', name:'배양병', eng:'bae yang byoung', gender:'M', grade:'A'},
+    {id:'M06', name:'박진호', eng:'park jin ho', gender:'M', grade:'A'},
+    {id:'M07', name:'손명연', eng:'myoung yeun', gender:'F', grade:'B'},
+    {id:'M08', name:'함승규', eng:'ham seung kyu', gender:'M', grade:'B'},
+    {id:'M09', name:'이용준', eng:'lee yong joon', gender:'M', grade:'B'},
+    {id:'M10', name:'고용우', eng:'ko yong woo', gender:'M', grade:'B'},
+    {id:'M11', name:'세르게이', eng:'sergey', gender:'M', grade:'A'},
+    {id:'M12', name:'체리', eng:'cherry', gender:'F', grade:'C'},
+    {id:'M13', name:'빈세트', eng:'vincent', gender:'M', grade:'A'}
+];
+
+// 4. 핵심 기능 로직
+const ROUNDS = [
+    {label:'1라운드', time:'06:00', courts:[1, 2], mixed:true},
+    {label:'2라운드', time:'06:30', courts:[1, 2], mixed:false},
+    {label:'3라운드', time:'07:00', courts:[1], mixed:false},
+    {label:'4라운드', time:'07:30', courts:[1], mixed:false}
+];
+
+function toggleAttend(id) {
+    let att = DB.get('attendees') || [];
+    const idx = att.indexOf(id);
+    if(idx > -1) att.splice(idx, 1);
+    else att.push(id);
+    DB.set('attendees', att);
+    renderHome();
+}
+
+function generateMatching() {
+    if(!authAdmin()) return;
+    const attIds = DB.get('attendees') || [];
+    if(attIds.length < 4) { toast("최소 4명이 필요합니다."); return; }
+    
+    const players = MEMBERS.filter(m => attIds.includes(m.id));
+    const allMatches = [];
+    
+    ROUNDS.forEach(r => {
+        let pool = [...players].sort(() => Math.random() - 0.5);
+        const roundMatches = [];
+        r.courts.forEach(c => {
+            if(pool.length >= 4) {
+                roundMatches.push({
+                    court: c,
+                    teamA: [pool.shift(), pool.shift()],
+                    teamB: [pool.shift(), pool.shift()],
+                    scoreA: null, scoreB: null
+                });
+            }
+        });
+        allMatches.push({ ...r, matches: roundMatches, waiting: pool });
+    });
+    DB.set('matches', allMatches);
+    renderMatching();
+    toast("매칭이 생성되었습니다.");
+}
+
+function saveScore(ri, gi) {
+    if(!authAdmin()) return;
+    const matches = DB.get('matches');
+    const sA = parseInt(document.getElementById(`sA_${ri}_${gi}`).value);
+    const sB = parseInt(document.getElementById(`sB_${ri}_${gi}`).value);
+    
+    if(isNaN(sA) || isNaN(sB)) return;
+    
+    const game = matches[ri].matches[gi];
+    game.scoreA = sA;
+    game.scoreB = sB;
+    
+    // 전적 누적 로직
+    const stats = DB.get('stats') || {};
+    const updatePlayer = (p, win, draw, lose) => {
+        if(!stats[p.id]) stats[p.id] = {w:0, d:0, l:0};
+        stats[p.id].w += win; stats[p.id].d += draw; stats[p.id].l += lose;
+    };
+    
+    const isWinA = sA > sB;
+    const isDraw = sA === sB;
+    
+    game.teamA.forEach(p => updatePlayer(p, isWinA?1:0, isDraw?1:0, (!isWinA&&!isDraw)?1:0));
+    game.teamB.forEach(p => updatePlayer(p, !isWinA?1:0, isDraw?1:0, (isWinA&&!isDraw)?1:0));
+    
+    DB.set('matches', matches);
+    DB.set('stats', stats);
+    toast("결과가 저장 및 누적되었습니다.");
+}
+
+function prepareNextWeek() {
+    if(!authAdmin()) return;
+    if(!confirm("참여 신청과 대진표를 초기화하시겠습니까? (누적 전적은 유지)")) return;
+    DB.set('attendees', []);
+    DB.set('matches', []);
+    renderHome();
+    toast("새 주차 준비 완료");
+}
+
+// 5. 렌더링 시스템
+function renderHome() {
+    const attIds = DB.get('attendees') || [];
+    document.getElementById('attCount').textContent = attIds.length + "명";
+    let html = '<div class="chip-wrap" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">';
+    MEMBERS.forEach(m => {
+        const active = attIds.includes(m.id) ? 'on' : '';
+        html += `<div class="chip ${active}" onclick="toggleAttend('${m.id}')" style="padding:12px;background:#fff;border:1px solid #eee;border-radius:10px;display:flex;justify-content:space-between;${active?'border-color:var(--primary);background:#f0faf5;':''}">
+            <span><b>${m.name}</b> <small style="color:#888;">${m.grade}</small></span>
+            <span>${active?'✔️':''}</span>
+        </div>`;
+    });
+    document.getElementById('attList').innerHTML = html + '</div>';
+}
+
+function renderMatching() {
+    const matches = DB.get('matches') || [];
+    const container = document.getElementById('matchDisplay');
+    if(!matches.length) { container.innerHTML = '<div style="text-align:center;padding:40px;color:#aaa;">생성된 매칭이 없습니다.</div>'; return; }
+    
+    container.innerHTML = matches.map((r, ri) => `
+        <div class="round-header" style="background:#eee;padding:8px 12px;border-radius:8px;margin-top:15px;font-size:13px;font-weight:700;">
+            ${r.label} (${r.time}) - ${r.courts.length}코트
         </div>
-        <div class="match-row">
-          <div class="team-a">${tA}</div>
-          <div class="vs-box">vs</div>
-          <div class="team-b">${tB}</div>
+        ${r.matches.map(m => `
+            <div class="court-block">
+                <div style="font-size:11px;color:var(--primary);font-weight:800;margin-bottom:5px;">${m.court}번 코트</div>
+                <div class="match-row">
+                    <div class="team-a">${m.teamA.map(p=>p.name).join('<br>')}</div>
+                    <div class="vs">VS</div>
+                    <div class="team-b">${m.teamB.map(p=>p.name).join('<br>')}</div>
+                </div>
+            </div>
+        `).join('')}
+    `).join('');
+}
+
+function renderResults() {
+    const matches = DB.get('matches') || [];
+    const container = document.getElementById('scoreList');
+    container.innerHTML = matches.map((r, ri) => r.matches.map((m, gi) => `
+        <div class="card">
+            <div style="font-size:11px;margin-bottom:8px;">${r.label} - ${m.court}코트</div>
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+                <div style="flex:1;text-align:right;">${m.teamA.map(p=>p.name).join('/')}</div>
+                <div style="margin:0 15px;display:flex;gap:5px;">
+                    <input type="number" id="sA_${ri}_${gi}" class="score-input" value="${m.scoreA||''}">
+                    <input type="number" id="sB_${ri}_${gi}" class="score-input" value="${m.scoreB||''}">
+                </div>
+                <div style="flex:1;">${m.teamB.map(p=>p.name).join('/')}</div>
+            </div>
+            <button class="btn btn-primary btn-sm" style="width:100%;margin-top:10px;" onclick="saveScore(${ri},${gi})">결과 저장</button>
         </div>
-      </div>`;
+    `).join('')).join('');
+}
+
+function renderRank() {
+    const stats = DB.get('stats') || {};
+    const ranked = [...MEMBERS].map(m => ({ ...m, ...stats[m.id] || {w:0, d:0, l:0} }))
+        .sort((a,b) => (b.w * 3 + b.d) - (a.w * 3 + a.d));
+        
+    document.getElementById('rankList').innerHTML = `
+        <div style="font-size:14px;font-weight:700;margin-bottom:15px;">🏆 클럽 랭킹</div>
+        ${ranked.map((m, i) => `
+            <div class="rank-row">
+                <div style="width:25px;font-weight:800;color:${i<3?'#BA7517':'#ccc'};">${i+1}</div>
+                <div class="avatar">${m.name[0]}</div>
+                <div class="member-info">
+                    <div><b>${m.name}</b> <span class="badge badge-a">${m.grade}</span></div>
+                    <div style="font-size:11px;color:#888;">${m.w}승 ${m.d}무 ${m.l}패</div>
+                </div>
+                <div style="font-weight:800;color:var(--primary);">${(m.w*3+m.d)}pt</div>
+            </div>
+        `).join('')}
+    `;
+}
+
+function renderAccounting() {
+    // 예시 데이터 (실제로는 구글 시트에서 불러옴)
+    const logs = [
+        {date:'05-11', title:'5월 회비 입금', amount:300000},
+        {date:'05-12', title:'윌슨 챔피언십 공 구매', amount:-56000}
+    ];
+    let income = 0; let total = 0;
+    const logHtml = logs.map(l => {
+        total += l.amount; if(l.amount > 0) income += l.amount;
+        return `<div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #f9f9f9;font-size:13px;">
+            <div><small style="color:#aaa;">${l.date}</small><div>${l.title}</div></div>
+            <div style="font-weight:700;color:${l.amount>0?'var(--primary)':'var(--danger)'};">${l.amount.toLocaleString()}원</div>
+        </div>`;
     }).join('');
-    const wait=round.waiting&&round.waiting.length
-      ?`<div style="font-size:12px;color:#aaa;margin:4px 0 8px;padding-left:4px;">대기: ${round.waiting.join(', ')}</div>`:'';
-    return `<div class="round-header">
-      <span>${round.label} · ${round.time}</span>
-      <div style="display:flex;gap:4px;">${courtBadge}${typeBadge}</div>
-    </div>${courts}${wait}`;
-  }).join('');
+    document.getElementById('accIncome').textContent = income.toLocaleString() + "원";
+    document.getElementById('accBalance').textContent = total.toLocaleString() + "원";
+    document.getElementById('accLogs').innerHTML = logHtml;
 }
 
-// ── 결과 입력 ──
-function renderResults(){
-  const matches=DB.get('matches')||[];
-  if(!matches.length){document.getElementById('resultsList').innerHTML='<div class="empty">매칭표를 먼저 생성해주세요</div>';return;}
-  document.getElementById('resultsList').innerHTML=matches.map((round,ri)=>
-    round.matches.map((g,gi)=>{
-      const tA=g.teamA.map(p=>p.name).join(' / ');
-      const tB=g.teamB.map(p=>p.name).join(' / ');
-      return `<div class="court-block">
-        <div class="court-title">
-          <span class="badge badge-blue">${g.court}코트</span>
-          <span style="font-size:12px;color:#888;">${round.label}</span>
-          ${g.scoreA!==null?'<span class="badge badge-green" style="margin-left:auto;">완료</span>':''}
-        </div>
-        <div class="match-row">
-          <div class="team-a">${tA}</div>
-          <div class="vs-box">vs</div>
-          <div class="team-b">${tB}</div>
-        </div>
-        <div class="score-inputs">
-          <input type="number" min="0" max="99" value="${g.scoreA!==null?g.scoreA:''}" placeholder="A팀" id="sA_${ri}_${gi}" style="width:52px;text-align:center;">
-          <span style="color:#aaa;font-size:14px;">:</span>
-          <input type="number" min="0" max="99" value="${g.scoreB!==null?g.scoreB:''}" placeholder="B팀" id="sB_${ri}_${gi}" style="width:52px;text-align:center;">
-          <button class="btn btn-sm btn-green" style="margin-left:6px;" onclick="saveScore(${ri},${gi})">저장</button>
-        </div>
-      </div>`;
-    }).join('')
-  ).join('');
+// 공통 함수
+function showTab(id, btn) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    btn.classList.add('active');
+    if(id === 'home') renderHome();
+    if(id === 'matching') renderMatching();
+    if(id === 'results') renderResults();
+    if(id === 'rank') renderRank();
+    if(id === 'accounting') renderAccounting();
 }
 
-function saveScore(ri,gi){
-  const matches=DB.get('matches')||[];
-  const sA=parseInt(document.getElementById(`sA_${ri}_${gi}`).value);
-  const sB=parseInt(document.getElementById(`sB_${ri}_${gi}`).value);
-  if(isNaN(sA)||isNaN(sB)){toast('점수를 입력해주세요');return;}
-  matches[ri].matches[gi].scoreA=sA;
-  matches[ri].matches[gi].scoreB=sB;
-  DB.set('matches',matches);
-  const game=matches[ri].matches[gi];
-  const aWin=sA>sB;
-  const results=DB.get('gameResults')||{};
-  game.teamA.forEach(p=>{if(!results[p.id])results[p.id]={win:0,lose:0};aWin?results[p.id].win++:results[p.id].lose++;});
-  game.teamB.forEach(p=>{if(!results[p.id])results[p.id]={win:0,lose:0};aWin?results[p.id].lose++:results[p.id].win++;});
-  DB.set('gameResults',results);
-  toast('결과 저장!');
-  renderResults();
+function copyAccount(acc) {
+    navigator.clipboard.writeText(acc).then(() => toast("계좌번호가 복사되었습니다."));
 }
 
-// ── 회원 관리 ──
-let editingId=null;
-function openAddMember(){
-  editingId=null;
-  document.getElementById('modalTitle').textContent='회원 추가';
-  document.getElementById('mNameKo').value='';
-  document.getElementById('mName').value='';
-  document.getElementById('mGender').value='M';
-  document.getElementById('mGrade').value='B';
-  openModal('memberModal');
-}
-function editMember(id){
-  const m=memberById(id);if(!m)return;
-  editingId=id;
-  document.getElementById('modalTitle').textContent='회원 수정';
-  document.getElementById('mNameKo').value=m.nameKo||'';
-  document.getElementById('mName').value=m.name;
-  document.getElementById('mGender').value=m.gender;
-  document.getElementById('mGrade').value=m.grade;
-  openModal('memberModal');
-}
-function saveMember(){
-  const nameKo=document.getElementById('mNameKo').value.trim();
-  const name=document.getElementById('mName').value.trim();
-  const gender=document.getElementById('mGender').value;
-  const grade=document.getElementById('mGrade').value;
-  if(!name){toast('영문 이름을 입력해주세요');return;}
-  const members=DB.get('members')||[];
-  if(editingId){
-    const i=members.findIndex(m=>m.id===editingId);
-    if(i>=0)members[i]={...members[i],name,nameKo:nameKo||name,gender,grade};
-    toast('수정 완료');
-  } else {
-    const maxOrder=Math.max(...members.map(m=>m.joinOrder),0);
-    members.push({id:uid(),name,nameKo:nameKo||name,gender,grade,joinOrder:maxOrder+1});
-    toast(name+' 추가!');
-  }
-  DB.set('members',members);
-  closeModal('memberModal');
-  renderMembers();
-}
-function deleteMember(id){
-  if(!confirm('삭제할까요?'))return;
-  DB.set('members',(DB.get('members')||[]).filter(m=>m.id!==id));
-  toast('삭제 완료');renderMembers();
+function toast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg; t.style.display = 'block';
+    setTimeout(() => t.style.display = 'none', 2000);
 }
 
-function renderMembers(){
-  const members=DB.get('members')||[];
-  const results=DB.get('gameResults')||{};
-  const gradeBadge={A:'badge-blue',B:'badge-green',C:'badge-amber'};
-  const gradeLabel={A:'A조',B:'B조',C:'C조'};
-  document.getElementById('memberCount').textContent=`(${members.length}명)`;
-  document.getElementById('memberList').innerHTML=members.length?members.map((m,i)=>{
-    const r=results[m.id]||{win:0,lose:0};
-    const total=r.win+r.lose;
-    const wr=total>0?Math.round(r.win/total*100):0;
-    return `<div class="member-row">
-      ${avatar(m.name,i)}
-      <div class="member-info">
-        <div class="member-name">${m.nameKo||m.name} <span style="font-size:11px;font-weight:400;color:#aaa;">${m.name}</span> <span style="font-size:11px;color:${m.gender==='F'?'#993556':'#185FA5'};">${m.gender}</span></div>
-        <div class="member-sub">${total}경기 · 승률 ${wr}% · <span class="badge ${gradeBadge[m.grade]||'badge-gray'}" style="font-size:10px;">${gradeLabel[m.grade]||m.grade}</span></div>
-      </div>
-      <button class="btn btn-sm" onclick="editMember('${m.id}')">수정</button>
-      <button class="btn btn-sm btn-danger" onclick="deleteMember('${m.id}')">삭제</button>
-    </div>`;
-  }).join(''):`<div class="empty">회원이 없어요</div>`;
-}
-
-// ── 랭킹 ──
-function renderRank(){
-  const members=DB.get('members')||[];
-  const results=DB.get('gameResults')||{};
-  const ranked=members.map((m,i)=>({...m,idx:i,...(results[m.id]||{win:0,lose:0})}))
-    .sort((a,b)=>{
-      const wa=(a.win+a.lose>0?a.win/(a.win+a.lose):0);
-      const wb=(b.win+b.lose>0?b.win/(b.win+b.lose):0);
-      return wb-wa||b.win-a.win;
-    });
-  const cls=['gold','silver','bronze'];
-  document.getElementById('rankList').innerHTML=ranked.map((m,i)=>{
-    const total=m.win+m.lose;
-    const wr=total>0?Math.round(m.win/total*100):0;
-    return `<div class="rank-row">
-      <div class="rank-num ${cls[i]||''}">${i+1}</div>
-      ${avatar(m.name,m.idx)}
-      <div class="member-info"><div class="member-name">${m.name}</div><div class="member-sub">${m.win}승 ${m.lose}패</div></div>
-      <div style="text-align:right;">
-        <div style="font-size:13px;font-weight:600;color:#1a1a1a;">${wr}%</div>
-        <div class="bar-wrap"><div class="bar-fill" style="width:${wr}%"></div></div>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-const renders={home:renderHome,matching:renderMatching,results:renderResults,members:renderMembers,rank:renderRank};
-init();
-checkDeadline();
+// 실행
 renderHome();
 </script>
 </body>
