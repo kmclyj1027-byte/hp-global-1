@@ -38,6 +38,11 @@
     .score-input-wrap { display:flex; gap:5px; align-items:center; justify-content:center; margin-top:10px; }
     .score-input { width:50px; text-align:center; font-weight:700; border:2px solid var(--primary); }
 
+    /* 테이블 스타일 */
+    table { width:100%; border-collapse:collapse; font-size:12px; text-align:left; margin-top:5px; min-width:380px;}
+    th { background:#f1f1f1; color:#555; padding:10px 8px; font-weight:700; border-bottom:2px solid #ddd; font-size:11px;}
+    td { padding:10px 8px; border-bottom:1px solid #eee; vertical-align:middle;}
+
     .toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.8);color:#fff;padding:10px 24px;border-radius:30px;font-size:13px;z-index:1000;display:none;}
 </style>
 </head>
@@ -77,7 +82,7 @@
         <button class="active" onclick="showTab('home',this)">참여신청</button>
         <button onclick="showTab('matching',this)">매칭표</button>
         <button onclick="showTab('results',this)">결과입력</button>
-        <button onclick="showTab('accounting',this)">회계</button>
+        <button onclick="showTab('accounting',this)">회계장부</button>
         <button onclick="showTab('members',this)">랭킹</button>
     </div>
 
@@ -109,23 +114,63 @@
 
     <div id="accounting" class="section">
         <div class="admin-form" style="background:#f0f7f4; border:1px solid var(--primary); margin-bottom:15px;">
-            <b style="display:block; margin-bottom:10px; color:var(--dark);">💰 회계 장부 기입 (Admin)</b>
+            <b style="display:block; margin-bottom:10px; color:var(--dark);">💰 회계 데이터 입력 (Admin)</b>
             <div style="display:flex; flex-direction:column; gap:8px;">
                 <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
-                    <input type="text" id="accDate" placeholder="날짜 (05.11)">
-                    <input type="text" id="accCategory" placeholder="항목 (공구매 등)">
+                    <input type="text" id="accDate" placeholder="날짜 (형식: 05.31)">
+                    <input type="text" id="accCategory" placeholder="항목명 (예: 5월 정기회비)">
                 </div>
-                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
-                    <input type="number" id="accIncome" placeholder="수입(+)">
-                    <input type="number" id="accPay" placeholder="지출(-)">
+                <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:8px;">
+                    <input type="number" id="accIncome" placeholder="수입액(+)">
+                    <input type="number" id="accPay" placeholder="지출액(-)">
+                    <input type="text" id="accEtc" placeholder="비고">
                 </div>
-                <input type="text" id="accEtc" placeholder="비고 (특이사항)">
-                <button class="btn btn-primary" onclick="addAccLog()" style="width:100%; padding:12px;">장부 기록 실행</button>
+                <button class="btn btn-primary" onclick="addAccLog()" style="width:100%; padding:12px; font-size:14px;">장부 기록 및 전표 반영</button>
             </div>
         </div>
-        <div class="card">
-            <div id="accSummary" style="font-size:16px; font-weight:800; border-bottom:2px solid #eee; padding-bottom:10px; margin-bottom:10px;">현재 잔액: 0원</div>
-            <div id="accLogs"></div>
+
+        <div class="card" style="padding:15px; margin-bottom:12px; background:#0c3547; color:#fff; border:none;">
+            <div id="accSummary" style="font-weight:700;"></div>
+        </div>
+
+        <div class="card" style="padding:0; border:2px solid var(--primary); margin-bottom:15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+            <div style="background:var(--primary); color:#fff; padding:10px 15px; font-weight:700; font-size:13px; display:flex; justify-content:space-between;">
+                <span>📊 월계표 (Monthly Balance Sheet)</span>
+                <span style="font-size:10px; font-weight:normal; align-self:center;">매월 말일 자동 정산</span>
+            </div>
+            <div style="overflow-x:auto; -webkit-overflow-scrolling:touch;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>정산월</th>
+                            <th style="text-align:right; color:#1D9E75;">총 수입(+)</th>
+                            <th style="text-align:right; color:#A32D2D;">총 지출(-)</th>
+                            <th style="text-align:right;">월말 마감잔액</th>
+                        </tr>
+                    </thead>
+                    <tbody id="accMonthlyBody"></tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div class="card" style="padding:0; border:1px solid #ddd; margin-bottom:15px;">
+            <div style="background:#f8f9fa; padding:10px 15px; font-weight:700; font-size:13px; color:#444; border-bottom:1px solid #ddd;">
+                📋 일별 장부 (Daily Transaction Ledger)
+            </div>
+            <div style="overflow-x:auto; -webkit-overflow-scrolling:touch;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width:55px;">날짜</th>
+                            <th>적요(항목명/비고)</th>
+                            <th style="text-align:right; width:75px;">수입 요건</th>
+                            <th style="text-align:right; width:75px;">지출 요건</th>
+                            <th id="thAdminControl" style="text-align:center; width:75px; display:none;">관리</th>
+                        </tr>
+                    </thead>
+                    <tbody id="accSheetBody"></tbody>
+                </table>
+            </div>
         </div>
     </div>
 
@@ -152,6 +197,7 @@ const DB = {
     set(k,v){ localStorage.setItem('smtc_'+k, JSON.stringify(v)); }
 };
 
+// 기본 데이터 세팅
 const INITIAL_MEMBERS = [
     {id:'M01', name:'박진민', grade:'A', type:'M', w:0, l:0}, {id:'M02', name:'김승창', grade:'A', type:'M', w:0, l:0},
     {id:'M03', name:'홍정석', grade:'A', type:'M', w:0, l:0}, {id:'M04', name:'최진규', grade:'A', type:'M', w:0, l:0},
@@ -159,7 +205,7 @@ const INITIAL_MEMBERS = [
     {id:'M07', name:'손명연', grade:'B', type:'M', w:0, l:0}, {id:'M08', name:'함승규', grade:'B', type:'M', w:0, l:0},
     {id:'M09', name:'이용준', grade:'B', type:'M', w:0, l:0}, {id:'M10', name:'고용우', grade:'B', type:'M', w:0, l:0},
     {id:'M11', name:'세르게이', grade:'A', type:'M', w:0, l:0}, {id:'M12', name:'체리', grade:'C', type:'M', w:0, l:0},
-    {id:'M13', name:'빈센트', grade:'A', type:'M', w:0, l:0}
+    {id:'M13', name:'빈세트', grade:'A', type:'M', w:0, l:0}
 ];
 
 function authAdmin() {
@@ -167,6 +213,9 @@ function authAdmin() {
     if (pw === ADMIN_PW) {
         isAdmin = true;
         document.getElementById('adminStatus').textContent = "Admin Mode Active";
+        if(document.getElementById('accounting').classList.contains('active')) {
+            renderAccounting();
+        }
         toast("인증 성공"); return true;
     }
     toast("인증 실패"); return false;
@@ -306,7 +355,8 @@ function renderRankArea() {
     document.getElementById('rankArea').innerHTML = html;
 }
 
-// 회계 기능 확정 (시트3 항목 반영)
+// ----------------- 자바스크립트 회계 관리 연동 부 ----------------- //
+
 function addAccLog() {
     if(!isAdmin && !authAdmin()) return;
     const date = document.getElementById('accDate').value;
@@ -314,7 +364,8 @@ function addAccLog() {
     const income = parseInt(document.getElementById('accIncome').value) || 0;
     const pay = parseInt(document.getElementById('accPay').value) || 0;
     const etc = document.getElementById('accEtc').value;
-    if (!date || !category) { alert("날짜와 항목을 입력해주세요."); return; }
+    
+    if (!date || !category) { alert("날짜와 항목은 필수 요건입니다."); return; }
 
     let logs = DB.get('accLog') || [];
     logs.unshift({ date, category, income, pay, etc, id: Date.now() });
@@ -324,27 +375,129 @@ function addAccLog() {
     document.getElementById('accIncome').value = ""; document.getElementById('accPay').value = "";
     document.getElementById('accEtc').value = "";
     
-    renderAccounting(); toast("회계 기록 성공");
+    renderAccounting(); toast("전표가 누적되었습니다.");
+}
+
+function deleteAccLog(id) {
+    if(!isAdmin && !authAdmin()) return;
+    if(!confirm("해당 내역을 정말 삭제하시겠습니까?")) return;
+
+    let logs = DB.get('accLog') || [];
+    logs = logs.filter(l => l.id !== id);
+    DB.set('accLog', logs);
+
+    renderAccounting(); toast("삭제되었습니다.");
+}
+
+function editAccLog(id) {
+    if(!isAdmin && !authAdmin()) return;
+    
+    let logs = DB.get('accLog') || [];
+    const item = logs.find(l => l.id === id);
+    if(!item) return;
+
+    const newDate = prompt("수정할 날짜를 입력하세요:", item.date);
+    if(newDate === null) return; 
+    
+    const newCategory = prompt("수정할 항목명을 입력하세요:", item.category);
+    if(!newCategory) return;
+
+    const newIncome = prompt("수정할 수입액을 입력하세요:", item.income);
+    const newPay = prompt("수정할 지출액을 입력하세요:", item.pay);
+    const newEtc = prompt("수정할 비고 내용을 입력하세요:", item.etc || "");
+
+    item.date = newDate;
+    item.category = newCategory;
+    item.income = parseInt(newIncome) || 0;
+    item.pay = parseInt(newPay) || 0;
+    item.etc = newEtc;
+
+    DB.set('accLog', logs);
+    renderAccounting(); toast("수정되었습니다.");
 }
 
 function renderAccounting() {
     const logs = DB.get('accLog') || [];
     let totalIncome = 0; let totalPay = 0;
-    let html = '';
+    let monthlyData = {};
+    let dailyTableHtml = '';
+
+    const thAdmin = document.getElementById('thAdminControl');
+    if(thAdmin) thAdmin.style.display = isAdmin ? 'table-cell' : 'none';
+
+    let sortedLogsForCalc = [...logs].sort((a, b) => parseFloat(a.date) - parseFloat(b.date));
+
+    // 일별 장부 출력 행 빌드
     logs.forEach(l => {
         totalIncome += l.income; totalPay += l.pay;
-        html += `<div style="display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid #f9f9f9; font-size:13px;">
-            <div style="flex:1; min-width:0; padding-right:10px;">
-                <div style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-weight:600;">${l.category}</div>
-                <div style="font-size:10px; color:#aaa;">${l.date} ${l.etc ? '| '+l.etc : ''}</div>
-            </div>
-            <div style="font-weight:700; color:${l.income>0?'var(--primary)':'var(--danger)'};">
-                ${l.income>0?'+'+l.income.toLocaleString():'-'+l.pay.toLocaleString()}원
-            </div>
-        </div>`;
+
+        dailyTableHtml += `
+            <tr>
+                <td style="color:#777; font-weight:600;">${l.date}</td>
+                <td>
+                    <div style="font-weight:700; color:#333;">${l.category}</div>
+                    ${l.etc ? `<div style="font-size:10px; color:#999; margin-top:2px;">📌 ${l.etc}</div>` : ''}
+                </td>
+                <td style="text-align:right; font-weight:700; color:var(--primary);">
+                    ${l.income > 0 ? '+' + l.income.toLocaleString() : '-'}
+                </td>
+                <td style="text-align:right; font-weight:700; color:var(--danger);">
+                    ${l.pay > 0 ? '-' + l.pay.toLocaleString() : '-'}
+                </td>
+                ${isAdmin ? `
+                <td style="text-align:center; white-space:nowrap;">
+                    <button class="btn btn-primary btn-sm" style="padding:3px 6px; font-size:10px; margin-right:2px;" onclick="editAccLog(${l.id})">수정</button>
+                    <button class="btn btn-danger btn-sm" style="padding:3px 6px; font-size:10px; background:#e24b4a;" onclick="deleteAccLog(${l.id})">삭제</button>
+                </td>` : ''}
+            </tr>`;
     });
-    document.getElementById('accSummary').textContent = `현재 잔액: ${(totalIncome - totalPay).toLocaleString()}원`;
-    document.getElementById('accLogs').innerHTML = html || '<div style="text-align:center;padding:20px;color:#ccc;">내역 없음</div>';
+
+    // 월계표 마감 마스터 정산 계산
+    let runningBalance = 0;
+    sortedLogsForCalc.forEach(l => {
+        let monthKey = "기타";
+        if (l.date) {
+            let monthPart = l.date.toString().trim().split('.')[0];
+            if(monthPart) monthKey = parseInt(monthPart) + "월";
+        }
+        
+        if (!monthlyData[monthKey]) {
+            monthlyData[monthKey] = { income: 0, pay: 0, finalBalance: 0 };
+        }
+        
+        monthlyData[monthKey].income += l.income;
+        monthlyData[monthKey].pay += l.pay;
+        runningBalance += (l.income - l.pay);
+        monthlyData[monthKey].finalBalance = runningBalance;
+    });
+
+    // 월계표 테이블 드로잉
+    let monthlyTableHtml = '';
+    const sortedMonths = Object.keys(monthlyData).sort((a, b) => parseInt(b) - parseInt(a));
+
+    sortedMonths.forEach(m => {
+        let mData = monthlyData[m];
+        monthlyTableHtml += `
+            <tr style="background:#fff;">
+                <td style="font-weight:700; color:#1a1a1a;">${m} 마감일자</td>
+                <td style="text-align:right; color:var(--primary); font-weight:700;">+${mData.income.toLocaleString()}원</td>
+                <td style="text-align:right; color:var(--danger); font-weight:700;">-${mData.pay.toLocaleString()}원</td>
+                <td style="text-align:right; font-weight:800; background:#fcfdfd; color:#0c3547;">
+                    ${mData.finalBalance.toLocaleString()}원
+                </td>
+            </tr>`;
+    });
+
+    const currentClubBalance = totalIncome - totalPay;
+    document.getElementById('accSummary').innerHTML = `
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-size:12px; opacity:0.9;">현재 클럽 누적 잔액 (실시간)</span>
+            <span style="font-size:17px; font-weight:800; color:#FFD700;">${currentClubBalance.toLocaleString()} 원</span>
+        </div>
+    `;
+
+    document.getElementById('accMonthlyBody').innerHTML = monthlyTableHtml || '<tr><td colspan="4" style="padding:20px; text-align:center; color:#ccc;">정산된 데이터가 없습니다.</td></tr>';
+    document.getElementById('accSheetBody').innerHTML = dailyTableHtml || '<tr><td colspan="4" style="padding:20px; text-align:center; color:#ccc;">내역이 없습니다.</td></tr>';
 }
 
 function addPerson() {
@@ -380,7 +533,6 @@ function toast(msg) {
     setTimeout(() => t.style.display = 'none', 2000);
 }
 
-// 초기화
 renderHome();
 </script>
 </body>
